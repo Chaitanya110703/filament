@@ -3,6 +3,9 @@
 namespace Filament\Support\Concerns;
 
 use Closure;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\StaticAction;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\Enums\IconSize;
 
@@ -47,6 +50,17 @@ trait HasIcon
 
     public function getIconSize(): IconSize | string | null
     {
-        return $this->evaluate($this->iconSize);
+        $iconSize = $this->evaluate($this->iconSize);
+
+        if ((($this instanceof ActionGroup) || ($this instanceof StaticAction)) && $this->isIconButton()) {
+            $iconSize ??= match ($this->getSize()) {
+                ActionSize::ExtraSmall => IconSize::Small,
+                ActionSize::Small, ActionSize::Medium => IconSize::Medium,
+                ActionSize::Large, ActionSize::ExtraLarge => IconSize::Large,
+                default => IconSize::Medium,
+            };
+        }
+
+        return $iconSize;
     }
 }

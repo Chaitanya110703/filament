@@ -43,10 +43,9 @@
     @endif
 
     @if (count($actions))
-        <div class="fi-fo-field-wrp-hint-action -m-1.5 flex items-center">
-            @foreach ($actions as $action)
-                {{ $action }}
-            @endforeach
-        </div>
+        <x-filament-actions::actions
+            :actions="$actions"
+            class="fi-fo-field-wrp-hint-actions"
+        />
     @endif
 </div>
